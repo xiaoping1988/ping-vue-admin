@@ -6,6 +6,7 @@ import Login from '../pages/login/Login'
 import Login2 from '../pages/login/Login2'
 import NoAuth from '../pages/NoAuth'
 import SysManage from '../pages/sysmanage'
+import Echarts from '../pages/echarts'
 import Console from '../pages/console'
 
 Vue.use(Router)
@@ -60,6 +61,18 @@ var router = new Router({
         { path: 'resource', name: '资源管理', component: SysManage.Resource, type: menuType.left },
         { path: 'second', name: '二级菜单', component: SysManage.User, type: menuType.left },
         { path: 'third', name: '三级菜单', component: SysManage.Role, type: menuType.left }
+      ]
+    },
+    {
+      path: '/echarts',
+      name: '',
+      component: Echarts,
+      type: menuType.header,
+      children: [
+        { path: 'line', name: '折线图', component: Echarts.Line, type: menuType.left },
+        { path: 'bar', name: '柱状图', component: Echarts.Bar, type: menuType.left },
+        { path: 'linebar', name: '折线&柱状混图', component: Echarts.LineBar, type: menuType.left },
+        { path: 'pie', name: '饼图', component: Echarts.Pie, type: menuType.left }
       ]
     }
   ]

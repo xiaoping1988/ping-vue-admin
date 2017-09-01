@@ -21,6 +21,9 @@
           <li :class="{'active': module === '/sys-manage'}" @click="push('/sys-manage')" v-if="auth.sys_manage">
             <span class="text-center">系统管理</span>
           </li>
+          <li :class="{'active': module === '/echarts'}" @click="push('/echarts')">
+            <span class="text-center">图表可视化</span>
+          </li>
         </ul>
       </div>
       <div class="navbar-right2">
