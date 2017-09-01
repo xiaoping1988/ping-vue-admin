@@ -4,9 +4,9 @@
     <c-menu-item path="/sys-manage/role" title="角色管理" v-if="auth.sys_manage_role"></c-menu-item>
     <c-menu-item path="/sys-manage/resource" title="资源管理" v-if="auth.sys_manage_resource"></c-menu-item>
     <c-menu-sub path="sub" title="一级菜单">
-      <c-menu-item path="/m" title="菜单"></c-menu-item>
+      <c-menu-item path="/sys-manage/second" title="菜单"></c-menu-item>
       <c-menu-third path="sec" title="二级菜单">
-        <c-menu-item path="/t" title="三级菜单"></c-menu-item>
+        <c-menu-item path="/sys-manage/third" title="三级菜单"></c-menu-item>
       </c-menu-third>
     </c-menu-sub>
   </c-menu>

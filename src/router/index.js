@@ -51,7 +51,9 @@ var router = new Router({
         { path: 'role', name: '角色管理', component: SysManage.Role, type: menuType.left },
         { path: 'role/detail', name: '角色信息', component: SysManage.RoleDetail },
         { path: 'role/create-or-update', name: '创建或者编辑角色', component: SysManage.RoleCreateOrUpdate },
-        { path: 'resource', name: '资源管理', component: SysManage.Resource, type: menuType.left }
+        { path: 'resource', name: '资源管理', component: SysManage.Resource, type: menuType.left },
+        { path: 'second', name: '二级菜单', component: SysManage.User, type: menuType.left },
+        { path: 'third', name: '三级菜单', component: SysManage.Role, type: menuType.left }
       ]
     }
   ]
