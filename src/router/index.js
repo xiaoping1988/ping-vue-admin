@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { getLoginUser, removeTokenCookie } from '../assets/js/assist'
 import { checkPageRouter, checkPageRouters } from '../pages/login/api/login'
 import Login from '../pages/login/Login'
+import Login2 from '../pages/login/Login2'
 import NoAuth from '../pages/NoAuth'
 import SysManage from '../pages/sysmanage'
 import Console from '../pages/console'
@@ -24,8 +25,13 @@ var router = new Router({
     },
     {
       path: '/',
-      name: '登录',
+      name: '登录1',
       component: Login
+    },
+    {
+      path: '/login',
+      name: '登录2',
+      component: Login2
     },
     {
       path: '/noauth',
@@ -68,7 +74,7 @@ const unLoginCheckRoutes = ['/noauth', '/test', '/console'];
 // 前端路由的权限控制
 router.beforeEach(function (to, from, next) {
   // 是否要做登录及权限校验
-  let loginCheck = true
+  let loginCheck = false
   unLoginCheckRoutes.forEach(r => {
     if (to.path === '/' || (r !== '/' && to.path.startsWith(r))) {
       loginCheck = false

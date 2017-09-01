@@ -22,9 +22,9 @@ Vue.use(MyPlugin)
 
 Vue.config.productionTip = false
 
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
   Mock.bootstrap()
-}
+// }
 
 /* eslint-disable no-new */
 var vm = new Vue({
