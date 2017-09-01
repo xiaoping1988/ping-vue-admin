@@ -2,7 +2,7 @@
 
 > A Vue.js project
 
-> 这是一个用vue做的后台系统的模板,可以作为脚手架工程
+> 这是一个用vue做的后台系统的模板,可以作为脚手架工程,https://xiaoping1988.github.io/index.html#/
 
 ## Build Setup
 
