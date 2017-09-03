@@ -56,7 +56,7 @@ function setAncestorsActive (item) {
 // 递归设置对应浏览器里路由地址的菜单为active状态
 function setActive (item, routePath, hasActive) {
   if (!isMenuComponent(item)) return false
-  if (routePath.startsWith(item.path)) {
+  if (routePath === item.path) {
     hasActive.has = true
     setAncestorsActive(item)
     // setBreadcrumb(item)

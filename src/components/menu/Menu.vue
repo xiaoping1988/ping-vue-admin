@@ -52,6 +52,9 @@
           initActive(this)
         }
       },
+      mounted () {
+        this.activeItem()
+      },
       updated () {
         this.activeItem()
       }

@@ -232,7 +232,7 @@ p {
 .navbar-cls-top .navbar-brand {
   color: #fff;
   background: #5C8DE7;/*#C90000;*/
-  width: 120px;
+  width: 160px;
   text-align: center;
   height: 50px;
   padding: 20px 10px;
@@ -413,7 +413,7 @@ p {
   height:100%;
 }
 .navbar-center ul li {
-  /*width: 120px;*/
+  /*width: 160px;*/
   height: 100%;
   cursor: pointer;
   /*color: #bbbec4;*/
@@ -506,9 +506,9 @@ p {
 
 @media(min-width:768px) {
   #page-wrapper{
-    margin: 0 0 0 120px;
+    margin: 0 0 0 160px;
     /*padding: 15px 30px;*/
-    width: calc(100% - 120px);
+    width: calc(100% - 160px);
   }
 
   #leftMenu {
@@ -517,7 +517,7 @@ p {
   .navbar-side {
     z-index: 1;
     position: absolute;
-    width: 120px;
+    width: 160px;
     overflow: auto;
     height: calc(100% - 50px);
   }

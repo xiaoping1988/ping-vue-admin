@@ -1,5 +1,5 @@
 <template>
-    <p-chart :data="barChartData" id="bar" height="400"></p-chart>
+    <p-chart :data="barChartData" id="bar" :height="400"></p-chart>
 </template>
 
 <script>

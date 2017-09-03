@@ -24,6 +24,9 @@
           <li :class="{'active': module === '/echarts'}" @click="push('/echarts')">
             <span class="text-center">图表可视化</span>
           </li>
+          <li :class="{'active': module === '/github'}" @click="push('/github')">
+            <span class="text-center">GitHub</span>
+          </li>
         </ul>
       </div>
       <div class="navbar-right2">
@@ -58,6 +61,9 @@
         },
         push (path) {
           if (this.module === path) return
+          if (path === '/github') {
+            window.open('https://github.com/xiaoping1988')
+          }
           this.$router.push(path)
           this.module = path
         },
