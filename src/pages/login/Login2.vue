@@ -1,32 +1,13 @@
 <template>
   <div class="login">
     <!--http://www.8dou5che.com/2017/05/17/vue-particles/-->
-    <vue-particles
-      color="#dedede"
-      :particleOpacity="0.7"
-      :particlesNumber="80"
-      shapeType="circle"
-      :particleSize="4"
-      linesColor="#dedede"
-      :linesWidth="1"
-      :lineLinked="true"
-      :lineOpacity="0.4"
-      :linesDistance="150"
-      :moveSpeed="3"
-      :hoverEffect="true"
-      hoverMode="grab"
-      :clickEffect="true"
-      clickMode="push"
-      style="height: 100%;width: 100%;"
-    >
-    </vue-particles>
     <div class="container" style="top: 50%;
     position: absolute;
     width: 100%;
-    margin-top: -146.5px;">
+    margin-top: -146.5px;z-index: 10">
       <div class="row">
         <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-          <div class="panel panel-default" style="background: none;text-align: center;border: 0px">
+          <div class="panel panel-default" style="background: none;text-align: center;border: 0px;z-index: 99999">
             <div class="panel-body login-form">
               <Form ref="loginForm" :model="loginForm" :rules="loginRule">
                 <h3 class="title">后台系统</h3>
@@ -44,7 +25,7 @@
                 </Form-item>
                 <Form-item>
                   <Button class="login-button" @click="handleSubmit()">登录</Button>
-                  <Button class="login-button" @click="login()">切换粒子效果</Button>
+                  <Button class="login-button" @click="login2()">切换粒子效果</Button>
                 </Form-item>
               </Form>
             </div>
@@ -52,6 +33,7 @@
         </div>
       </div>
     </div>
+    <p-waves style="top:20%"></p-waves>
   </div>
 </template>
 
@@ -90,8 +72,8 @@
           }
         })
       },
-      login () {
-        this.$router.push('/')
+      login2 () {
+        this.$router.push('/login')
       }
     },
     mounted () {
