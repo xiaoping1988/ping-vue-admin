@@ -229,7 +229,7 @@ function loadBaiDuMap () {
     }
     let script1 = document.createElement('script')
     script1.type = 'text/javascript'
-    script1.src = 'http://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
+    script1.src = 'https://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
     script1.onerror = reject
     document.head.appendChild(script1)
   })
@@ -248,13 +248,13 @@ function loadBaiDuHeatMap () {
       resolve(BMap)
       let script2 = document.createElement('script')
       script2.type = 'text/javascript'
-      script2.src = 'http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js'
+      script2.src = 'https://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js'
       script2.onerror = reject
       document.body.appendChild(script2)
     }
     let script1 = document.createElement('script')
     script1.type = 'text/javascript'
-    script1.src = 'http://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
+    script1.src = 'https://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
     script1.onerror = reject
     document.body.appendChild(script1)
   })
