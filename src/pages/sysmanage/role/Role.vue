@@ -1,135 +1,73 @@
 <template>
-  <div>
-    <div class="row">
-      <p class="page-title">角色管理</p>
-    </div>
-    <div class="row search-form">
-      <div class="col-md-10">
-      </div>
-      <div class="col-md-2 last-col">
-        <Button long @click="createRole" type="primary" icon="plus-round" v-if="auth.sys_manage_role_create">创建角色</Button>
-      </div>
-    </div>
-    <div class="row">
-      <Table border :columns="tableColumns" :data="pageList" >
-      </Table>
-    </div>
-  </div>
+  <el-table
+    :data="tableData"
+    style="width: 100%">
+    <el-table-column
+      prop="date"
+      label="日期"
+      sortable
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="姓名"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="address"
+      label="地址"
+      :formatter="formatter">
+    </el-table-column>
+    <el-table-column
+      prop="tag"
+      label="标签"
+      width="100"
+      :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+      :filter-method="filterTag"
+      filter-placement="bottom-end">
+      <template slot-scope="scope">
+        <el-tag
+          :type="scope.row.tag === '家' ? 'primary' : 'success'"
+          close-transition>{{scope.row.tag}}</el-tag>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
-  import {queryRoleList, deleteRoleById} from '../api/sysmanage'
-
   export default {
     data () {
       return {
-        auth: {},
-        searchName: '',
-        tableColumns: [
-          {
-            title: '角色名称',
-            key: 'name',
-            render: (h, params) => {
-              return h('div', [
-                h('a', {
-                  on: {
-                    click: () => {
-                      this.$router.push({
-                        path: '/sys-manage/role/detail',
-                        query: {roleId: this.pageList[params.index].roleId}
-                      })
-                    }
-                  }
-                }, params.row.name)
-              ])
-            }
-          },
-          { title: '所属系统', key: 'appName' },
-//          { title: '修改人', key: 'updator' },
-          {
-            title: '修改时间',
-            key: 'updateTime',
-            render: (h, params) => {
-              return h('c-format-date', { props: { val: params.row.updateTime } })
-            }
-          },
-          {
-            title: '操作',
-            key: 'action',
-            render: (h, params) => {
-              let btns = []
-              if (this.auth.sys_manage_role_update) {
-                btns.push(h('Button', {
-                  props: {
-                    type: 'info',
-                    size: 'small',
-                    icon: 'edit'
-                  },
-                  on: {
-                    click: () => {
-                      this.$router.push({
-                        path: '/sys-manage/role/create-or-update',
-                        query: {roleId: this.pageList[params.index].roleId}
-                      })
-                    }
-                  }
-                }, '编辑'))
-              }
-              if (this.auth.sys_manage_role_delete) {
-                btns.push(h('Button', {
-                  props: {
-                    type: 'info',
-                    size: 'small',
-                    icon: 'trash-a'
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: '确认',
-                        content: '确认删除记录[系统:' + params.row.appName + ',角色:' + params.row.name + ']',
-                        onOk: () => {
-                          deleteRoleById({roleId: this.pageList[params.index].roleId}).then(data => {
-                            if (data.code === 0) {
-                              this.queryRoles()
-                            } else {
-                              this.$Notice.error({
-                                title: '错误提示',
-                                desc: data.result
-                              });
-                            }
-                          })
-                        }
-                      })
-                    }
-                  }
-                }, '删除'))
-              }
-              return h('div', btns)
-            }
-          }
-        ],
-        pageList: []
+        tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
+          tag: '家'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄',
+          tag: '公司'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄',
+          tag: '家'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄',
+          tag: '公司'
+        }]
       }
     },
     methods: {
-      queryRoles () {
-        queryRoleList().then(res => {
-          if (res.code === 0) {
-            this.pageList = res.result
-          }
-        })
+      formatter (row, column) {
+        return row.address
       },
-      createRole () {
-        this.$router.push('/sys-manage/role/create-or-update')
+      filterTag (value, row) {
+        return row.tag === value
       }
-    },
-    mounted () {
-      this.getPageAuth('sys_manage_role_create,sys_manage_role_update,sys_manage_role_delete').then(res => { this.auth = res })
-      this.queryRoles()
     }
   }
 </script>
-
-<style>
-
-</style>

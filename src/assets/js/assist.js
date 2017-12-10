@@ -1,143 +1,12 @@
-// 判断是不是一个菜单组件
-function isMenuComponent (item) {
-  return item.$options._componentTag === 'c-menu-item' ||
-    item.$options._componentTag === 'c-menu-sub' ||
-    item.$options._componentTag === 'c-menu-third'
-}
-// 获得菜单组件的根
-function findRootMenu (item, ancestors) {
-  if (item.$options._componentTag === 'c-menu') {
-    return item
-  } else {
-    ancestors.push(item)
-  }
-  return findRootMenu(item.$parent, ancestors)
-}
-// 递归修改别的菜单的active状态
-function updateActiveRec (activeItem, item, ancestors) {
-  item.$children.forEach(child => {
-    if (child.$options._componentTag === 'c-menu-item') {
-      if (child.path !== activeItem.path && activeItem.$options._componentTag === 'c-menu-item') child.active = false
-      updateActiveRec(activeItem, child, ancestors)
-    } else if (child.$options._componentTag === 'c-menu-sub' || child.$options._componentTag === 'c-menu-third') {
-      if (child.path !== activeItem.path) {
-        let isAncestor = false
-        ancestors.forEach(item2 => {
-          if (child.path === item2.path) isAncestor = true
-        })
-        if (!isAncestor) child.active = false
-      }
-      updateActiveRec(activeItem, child, ancestors)
-    }
-  })
-}
-// 修改菜单的active状态
-function updateActive (item) {
-  let ancestors = [] // 不含rootMenu
-  let _root = findRootMenu(item, ancestors)
-  updateActiveRec(item, _root, ancestors)
-  if (item.$options._componentTag === 'c-menu-item') {
-    item.active = true
-  } else {
-    item.active = !item.active
-  }
-}
-export {updateActive};
+const cookieTokenKey = 'p_token'
 
-// 递归设置菜单以及祖先菜单为active状态
-function setAncestorsActive (item) {
-  if (item.$options._componentTag === 'c-menu') {
-    return
-  }
-  item.active = true
-  setAncestorsActive(item.$parent)
-}
-
-// 递归设置对应浏览器里路由地址的菜单为active状态
-function setActive (item, routePath, hasActive) {
-  if (!isMenuComponent(item)) return false
-  if (routePath === item.path) {
-    hasActive.has = true
-    setAncestorsActive(item)
-    // setBreadcrumb(item)
-    return false
-  }
-  item.$children.every(child => {
-    return setActive(child, routePath, hasActive)
-  })
-  return true
-}
-
-function setFirstMenuActive (firstItem) {
-  if (!isMenuComponent(firstItem)) return
-  firstItem.active = true
-  let _children = firstItem.$children
-  if (_children.length > 0) {
-    setFirstMenuActive(_children[0])
-  } else {
-    // setBreadcrumb(firstItem)
-  }
-}
-
-function removeActive (item) {
-  item.active = false
-  item.$children.forEach(c => {
-    removeActive(c)
-  })
-}
-// 初始化菜单的active状态
-function initActive (rootMenu) {
-  let _path = rootMenu.$route.path
-  let hasActive = {has: false}
-  removeActive(rootMenu)
-  rootMenu.$children.every(item => {
-    return setActive(item, _path, hasActive)
-  })
-  if (!hasActive.has) {
-    // 就设置第一个menuitem为active
-    let _children = rootMenu.$children
-    if (_children.length > 0) {
-      setFirstMenuActive(_children[0])
-    }
-  }
-}
-export {initActive};
-/**
- * 获取面包屑元素
- * @param item 点击的menuitem
- * @returns {Array}
- */
-function setBreadcrumb (item) {
-  let bc = []
-  unshiftBreadcrumb(item, bc)
-  item.$store.commit('setBreadcrumb', bc)
-}
-export {setBreadcrumb};
-/**
- * 向上查找面包屑并往面包屑数组的一个位置添加元素
- * @param item
- * @param bc
- */
-function unshiftBreadcrumb (item, bc) {
-  if (item.title) bc.unshift(item.title)
-  if (item.$options._componentTag === 'c-menu') return
-  unshiftBreadcrumb(item.$parent, bc)
-}
-var cookieTokenKey = 'bdap_token'
-
-var sessionUserKey = 'userInfo'
+const sessionUserKey = 'p_user'
 
 /**
  * 将登录用户放到sessionStorage中
  * @param user
  */
 function setLoginUser (user) {
-  user.pageIdsObj = {}
-  if (user.pageIds) {
-    user.pageIds.forEach(p => {
-      user.pageIdsObj[p] = true
-    })
-  }
   localStorage.setItem(sessionUserKey, JSON.stringify(user))
   addCookie(cookieTokenKey, user.token, 24)
 }
@@ -233,6 +102,43 @@ function removeTokenCookie () {
 
 export {removeTokenCookie}
 
+const defaultDatePattern = 'yyyy-MM-dd'
+
+/**
+ * 解析日期字符串为日期Date对象
+ * @param dateStr 字符串日期
+ * @param pattern 日期格式
+ * @returns {Date}
+ */
+function parseStrToDate (dateStr, pattern) {
+  if (!pattern || pattern === '') pattern = defaultDatePattern
+  let date = new Date()
+  if (pattern.includes('yyyy')) { // 年份
+    date.setFullYear(Number(dateStr.substr(pattern.indexOf('yyyy'), 4)))
+  }
+  if (pattern.includes('MM')) { // 月份
+    date.setMonth(Number(dateStr.substr(pattern.indexOf('MM'), 2)) - 1)
+  }
+  if (pattern.includes('dd')) { // 天
+    date.setDate(Number(dateStr.substr(pattern.indexOf('dd'), 2)))
+  }
+  if (pattern.includes('HH')) { // 小时
+    date.setHours(Number(dateStr.substr(pattern.indexOf('HH'), 2)))
+  }
+  if (pattern.includes('mm')) { // 分钟
+    date.setMinutes(Number(dateStr.substr(pattern.indexOf('mm'), 2)))
+  }
+  if (pattern.includes('ss')) { // 秒
+    date.setSeconds(Number(dateStr.substr(pattern.indexOf('ss'), 2)))
+  }
+  if (pattern.includes('SSS')) { // 毫秒
+    date.setMilliseconds(Number(dateStr.substr(pattern.indexOf('SSS'), 3)))
+  }
+  return date
+}
+
+export {parseStrToDate}
+
 /**
  * 格式化日期
  * @param dat 日期对象
@@ -240,8 +146,8 @@ export {removeTokenCookie}
  * @returns {*}
  */
 function formatDate (dat, parttern) {
-  if (!parttern || parttern === '') parttern = 'yyyy-MM-dd'
-  var o = {
+  if (!parttern || parttern === '') parttern = defaultDatePattern
+  let o = {
     'M+': dat.getMonth() + 1, // 月份
     'd+': dat.getDate(), // 日
     'h+': dat.getHours() % 12 === 0 ? 12 : dat.getHours() % 12, // 小时
@@ -251,7 +157,7 @@ function formatDate (dat, parttern) {
     'q+': Math.floor((dat.getMonth() + 3) / 3), // 季度
     'S': dat.getMilliseconds() // 毫秒
   };
-  var week = {
+  let week = {
     '0': '/u65e5',
     '1': '/u4e00',
     '2': '/u4e8c',
@@ -266,7 +172,7 @@ function formatDate (dat, parttern) {
   if (/(E+)/.test(parttern)) {
     parttern = parttern.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? '/u661f/u671f' : '/u5468') : '') + week[dat.getDay() + '']);
   }
-  for (var k in o) {
+  for (let k in o) {
     if (new RegExp('(' + k + ')').test(parttern)) {
       parttern = parttern.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
     }
@@ -283,12 +189,12 @@ export {formatDate}
  * @returns {Array}
  */
 function getDates (startDate, stopDate, parttern) {
-  if (!parttern || parttern === '') parttern = 'yyyy-MM-dd'
-  let dateArray = [];
-  let currentDate = startDate;
+  if (!parttern || parttern === '') parttern = defaultDatePattern
+  let dateArray = []
+  let currentDate = startDate
   while (currentDate <= stopDate) {
-    dateArray.push(formatDate(currentDate, parttern));
-    currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+    dateArray.push(formatDate(currentDate, parttern))
+    currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1))
   }
   return dateArray;
 }
@@ -296,40 +202,62 @@ function getDates (startDate, stopDate, parttern) {
 export {getDates}
 
 /**
- * 日期控件的公共shortcuts
- * <p>最近一周
- * <p>最近一个月
- * <p>最近三个月
- * @type {[*]}
+ * 获取两个时间区间的天数
+ * @param startDate
+ * @param stopDate
+ * @param parttern
+ * @returns {Number}
  */
-const shortcuts = [
-  {
-    text: '最近7天',
-    value () {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-      return [start, end];
-    }
-  },
-  {
-    text: '最近30天',
-    value () {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
-      return [start, end];
-    }
-  },
-  {
-    text: '最近90天',
-    value () {
-      const end = new Date();
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 89);
-      return [start, end];
-    }
-  }
-]
+function getDays (startDate, stopDate, parttern) {
+  if (!parttern || parttern === '') parttern = defaultDatePattern
+  return getDates(parseStrToDate(startDate, parttern), parseStrToDate(stopDate, parttern)).length
+}
 
-export {shortcuts}
+export {getDays}
+
+// const ak = 'DD279b2a90afdf0ae7a3796787a0742e'
+const ak = 'C442db13ee343023e84546b6765dfcff'
+/**
+ * 异步加载百度地图
+ * @returns {Promise}
+ * @constructor
+ */
+function loadBaiDuMap () {
+  return new Promise(function (resolve, reject) {
+    window.init = function () {
+      resolve(BMap)
+    }
+    let script1 = document.createElement('script')
+    script1.type = 'text/javascript'
+    script1.src = 'http://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
+    script1.onerror = reject
+    document.head.appendChild(script1)
+  })
+}
+
+export {loadBaiDuMap}
+
+/**
+ * 异步加载百度地图,以及热力图插件
+ * @returns {Promise}
+ * @constructor
+ */
+function loadBaiDuHeatMap () {
+  return new Promise(function (resolve, reject) {
+    window.init = function () {
+      resolve(BMap)
+      let script2 = document.createElement('script')
+      script2.type = 'text/javascript'
+      script2.src = 'http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js'
+      script2.onerror = reject
+      document.body.appendChild(script2)
+    }
+    let script1 = document.createElement('script')
+    script1.type = 'text/javascript'
+    script1.src = 'http://api.map.baidu.com/api?v=2.0&ak=' + ak + '&callback=init'
+    script1.onerror = reject
+    document.body.appendChild(script1)
+  })
+}
+
+export {loadBaiDuHeatMap}

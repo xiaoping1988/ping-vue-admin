@@ -1,8 +1,7 @@
-import CInputSearch from './InputSearch.vue'
-import CSubmitButton from './SubmitButton.vue'
+import FormButton from './FormButton.vue'
 
-let CForm = {}
-CForm.CInputSearch = CInputSearch
-CForm.CSubmitButton = CSubmitButton
+const Form = {
+  FormButton: FormButton
+}
 
-export default CForm
+export default Form

@@ -1,12 +1,16 @@
 import Echarts from './Echarts.vue'
-import Line from './Line.vue'
-import Bar from './Bar.vue'
-import LineBar from './LineBar.vue'
-import Pie from './Pie.vue'
+import Bar from './bar/Bar.vue'
+import Dashboard from './dashboard/Dashboard.vue'
+import Line from './line/Line.vue'
+import LineBar from './line/LineBar.vue'
+import Area from './line/Area.vue'
+import Pie from './pie/Pie.vue'
 
-Echarts.Line = Line
+Echarts.Dashboard = Dashboard
 Echarts.Bar = Bar
+Echarts.Line = Line
 Echarts.LineBar = LineBar
+Echarts.Area = Area
 Echarts.Pie = Pie
 
 export default Echarts

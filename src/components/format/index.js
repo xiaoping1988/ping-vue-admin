@@ -1,8 +1,13 @@
 import CFormatDate from './FormatDate.vue'
-import CFormatNum from './FormatNum.vue'
+import CFormatSufRate from './FormatSufRate.vue'
+import CFormatVal from './FormatVal.vue'
+import CFormatGrowthRate from './FormatGrowthRate.vue'
 
-let CFormat = {}
-CFormat.CFormatDate = CFormatDate
-CFormat.CFormatNum = CFormatNum
+let CFormat = {
+  CFormatDate: CFormatDate,
+  CFormatSufRate: CFormatSufRate,
+  CFormatVal: CFormatVal,
+  CFormatGrowthRate: CFormatGrowthRate
+}
 
 export default CFormat

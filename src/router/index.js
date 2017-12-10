@@ -1,66 +1,50 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { getLoginUser, removeTokenCookie } from '../assets/js/assist'
-import { checkPageRouter, checkPageRouters } from '../pages/login/api/login'
-import Login from '../pages/login/Login'
-import Login2 from '../pages/login/Login2'
-import NoAuth from '../pages/NoAuth'
+import Login from '../pages/login'
+import Scene from '../pages/scene'
+import Test from '../pages/Test.vue'
 import SysManage from '../pages/sysmanage'
 import Echarts from '../pages/echarts'
-import Console from '../pages/console'
+import BDMap from '../pages/bdmap'
 
 Vue.use(Router)
 
-var menuType = {
+const menuType = {
   header: 'headerMenu',
   left: 'leftMenu'
 }
 
-var router = new Router({
+let router = new Router({
   routes: [
     {
-      path: '*',
-      redirect: '/',
-      name: '未匹配的路由',
-      component: Login
-    },
-    {
       path: '/',
-      name: '登录1',
+      name: 'Login',
       component: Login
     },
     {
-      path: '/login',
-      name: '登录2',
-      component: Login2
+      path: '/test',
+      name: 'Test',
+      component: Test
     },
     {
-      path: '/noauth',
-      name: '没有权限',
-      component: NoAuth
+      path: '/scene',
+      name: 'Scene',
+      component: Scene
     },
     {
-      path: '/console',
-      name: '',
-      component: Console,
-      type: menuType.header,
-      children: []
+      path: '/scene/develop',
+      name: 'SceneDevelop',
+      component: Scene.SceneDevelop
     },
     {
-      path: '/sys-manage',
+      path: '/sys',
       name: '',
       component: SysManage,
       type: menuType.header,
       children: [
-        { path: 'user', name: '用户管理', component: SysManage.User, type: menuType.left },
-        { path: 'user/detail', name: '用户信息', component: SysManage.UserDetail },
-        { path: 'user/grant', name: '用户授权', component: SysManage.UserGrant },
-        { path: 'role', name: '角色管理', component: SysManage.Role, type: menuType.left },
-        { path: 'role/detail', name: '角色信息', component: SysManage.RoleDetail },
-        { path: 'role/create-or-update', name: '创建或者编辑角色', component: SysManage.RoleCreateOrUpdate },
-        { path: 'resource', name: '资源管理', component: SysManage.Resource, type: menuType.left },
-        { path: 'second', name: '二级菜单', component: SysManage.User, type: menuType.left },
-        { path: 'third', name: '三级菜单', component: SysManage.Role, type: menuType.left }
+        {path: 'user', name: '用户管理', component: SysManage.User, type: menuType.left},
+        {path: 'role', name: '角色管理', component: SysManage.Role, type: menuType.left}
       ]
     },
     {
@@ -69,10 +53,23 @@ var router = new Router({
       component: Echarts,
       type: menuType.header,
       children: [
-        { path: 'line', name: '折线图', component: Echarts.Line, type: menuType.left },
-        { path: 'bar', name: '柱状图', component: Echarts.Bar, type: menuType.left },
-        { path: 'linebar', name: '折线&柱状混图', component: Echarts.LineBar, type: menuType.left },
-        { path: 'pie', name: '饼图', component: Echarts.Pie, type: menuType.left }
+        {path: 'dashboard', name: '仪表盘', component: Echarts.Dashboard, type: menuType.left},
+        {path: 'line', name: '折线图', component: Echarts.Line, type: menuType.left},
+        {path: 'area', name: '面积图', component: Echarts.Area, type: menuType.left},
+        {path: 'bar', name: '柱状图', component: Echarts.Bar, type: menuType.left},
+        {path: 'linebar', name: '折线&柱状混图', component: Echarts.LineBar, type: menuType.left},
+        {path: 'pie', name: '饼图图', component: Echarts.Pie, type: menuType.left}
+      ]
+    },
+    {
+      path: '/bdmap',
+      name: '',
+      component: BDMap,
+      type: menuType.header,
+      children: [
+        {path: 'heat', name: '热力图', component: BDMap.HeatMap, type: menuType.left},
+        {path: 'polygon', name: '区域图', component: BDMap.Polygon, type: menuType.left},
+        {path: 'pg-heat', name: '区域热力图', component: BDMap.PGHeat, type: menuType.left}
       ]
     }
   ]
@@ -82,9 +79,8 @@ var router = new Router({
  * 不做登录校验的路由集合
  * @type {[*]}
  */
-const unLoginCheckRoutes = ['/noauth', '/test', '/console'];
+const unLoginCheckRoutes = ['/noauth', '/test', '/console']
 
-// 前端路由的权限控制
 router.beforeEach(function (to, from, next) {
   // 是否要做登录及权限校验
   let loginCheck = false
@@ -98,49 +94,7 @@ router.beforeEach(function (to, from, next) {
     if (user === null) {
       removeTokenCookie()
       next('/')
-      return
     }
-    checkPageRouter({pageRouter: to.path}).then(res => {
-      if (res.code === 0 && res.result) {
-        // 点击header导航栏菜单默认指向children中第一个有权限的左菜单
-        let _route = {}
-        router.options.routes.forEach(r => {
-          if (r.path === to.path && r.type === menuType.header) _route = r
-        })
-        let _children = _route.children
-        if (_children && _children.length > 0) {
-          let _routers = []
-          for (let key in _children) {
-            if (_children[key].type === menuType.left) {
-              _routers.push(to.path + '/' + _children[key].path)
-            }
-          }
-          if (_routers.length > 0) {
-            checkPageRouters({pageRouters: _routers.toString()}).then(res => {
-              if (res.code === 0 && res.result.length > 0) {
-                next(res.result[0])
-              } else {
-                next()
-              }
-            }).catch(error => {
-              console.log(error)
-              removeTokenCookie()
-              next('/')
-            })
-          } else {
-            next()
-          }
-        } else {
-          next()
-        }
-      } else {
-        next('/noauth')
-      }
-    }).catch(error => {
-      console.log(error)
-      removeTokenCookie()
-      next('/')
-    })
   } else {
     let _route = {}
     router.options.routes.forEach(r => {

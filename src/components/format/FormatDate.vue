@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import {formatDate} from '@/assets/js/assist.js'
+  import {formatDate} from '../../assets/js/assist.js'
   export default {
       props: {
           val: Number,

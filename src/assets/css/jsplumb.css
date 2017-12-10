@@ -1,0 +1,141 @@
+.jsp-develop-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  height: 43px;
+}
+
+.jsp-develop-left,
+.jsp-develop-right,
+.jsp-develop-canvas {
+  border-top: 1px solid #dfe4ed;
+  float: left;
+  height: calc(100% - 43px);
+  overflow: auto;
+}
+
+.jsp-develop-left {
+  width: 15%;
+}
+
+.jsp-develop-right {
+  width: 25%;
+}
+
+.jsp-develop-canvas {
+  width: 60%;
+  border-left: 1px solid #dfe4ed;
+  border-right: 1px solid #dfe4ed;
+}
+
+.jsp-develop-canvas .jsp-node {
+  position: absolute;
+}
+
+.jsp-node {
+  width: fit-content;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  border: 1px solid #2e6f9a;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: white;
+  z-index: 4;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.jsp-node i {
+  color: #2e6f9a;
+}
+
+.jsp-selected,
+.jsp-node:hover,
+.jsp-node:hover .jsp-node-name i{
+  background-color: #5c96bc;
+  color: white;
+}
+
+.jsp-selected,
+.jsp-selected i,
+.jsp-node:hover i{
+  color: white;
+}
+
+.jsp-node-tree {
+  color: #888;
+  font-size: 14px;
+}
+
+.jsp-node-tree i {
+  color: #5c96bc;
+  margin-right: 5px;
+}
+
+.jsp-node:hover .jsp-endpoint-circle,
+.jsp-node:hover .jsp-node-remove {
+  display: block;
+}
+
+.jsp-endpoint-circle {
+  display: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 100px;
+  border: 1px solid #2e6f9a;
+  position: absolute;
+  left: calc(50% - 5px);
+  background-color: white;
+}
+
+.jsp-endpoint-circle-top {
+  top: -5px;
+}
+
+.jsp-endpoint-circle-bottom {
+  bottom: -5px;
+}
+
+.jsp-node-remove {
+  display: none;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 100px;
+  /*border: 1px solid #5c96bc;*/
+  line-height: 15px;
+  text-align: center;
+  top: -15px;
+  right: 0px;
+  background-color: red!important;
+}
+
+.jtk-source-hover i,
+.jtk-target-hover i {
+  color: white;
+}
+
+
+.aLabel.jtk-hover, .jtk-source-hover, .jtk-target-hover {
+  background-color: #1e8151!important;
+  color: white!important;
+}
+
+.jsp-container {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  height: calc(100% - 45px);
+}
+
+.jsp-flow-tool {
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+}
+
+path {
+  cursor: pointer;
+}

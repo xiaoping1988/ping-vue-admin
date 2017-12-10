@@ -1,17 +1,12 @@
 import axios from 'axios'
-import qs from 'qs'
 import { getLoginUser, removeTokenCookie } from '../assets/js/assist'
+import {notifyError} from '../assets/js/vueGlobal'
 
 // Add a request interceptor
 axios.defaults.baseURL = ''
 if (process.env.NODE_ENV === 'development') {
-  // 与后端做联调时打开
-  // axios.defaults.baseURL = '后端服务器域名'
 }
-/*
-对后端请求做拦截
- */
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.interceptors.request.use(function (config) {
   let user = getLoginUser()
   if (user) {
@@ -21,11 +16,6 @@ axios.interceptors.request.use(function (config) {
       config.data = {token: user.token}
     }
   }
-  if (config.data) {
-    // console.log(config.data)
-    config.data = qs.stringify(config.data)
-    // console.log(config.data)
-  }
   return config
 }, function (error) {
   return Promise.reject(error)
@@ -33,13 +23,25 @@ axios.interceptors.request.use(function (config) {
 
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
-  if (response.data && response.data.code !== 0) {
-    if (response.data.code === 400 || response.data.code === 401) {
-      removeTokenCookie()
-      window.location.href = '/'
+  if (response.data) {
+    if (response.data.code === 0) {
+      return response
+    } else {
+      if (response.data.code === 400 || response.data.code === 401) { // token失效
+        removeTokenCookie()
+        window.location.href = '/'
+      } else {
+        notifyError(response.data.msg)
+        return Promise.reject(response.data.msg)
+      }
     }
+  } else {
+    vue.$notify.error({
+      title: '错误提示',
+      message: 'response error'
+    })
+    return Promise.reject(new Error('response error'))
   }
-  return response
 }, function (error) {
   return Promise.reject(error)
 });
