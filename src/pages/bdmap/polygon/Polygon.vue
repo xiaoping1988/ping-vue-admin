@@ -75,7 +75,7 @@
             if (biz.name.length > 0) {
               offsetWidth = (biz.name.length / 2) * -10
             }
-            let label = new BMap.Label(biz.name, {position: centerPoint, offset: new BMap.Size(offsetWidth, -10)})
+            let label = new BMap.Label(biz.name === '' ? biz.id : biz.name, {position: centerPoint, offset: new BMap.Size(offsetWidth, -10)})
 //            label.setStyle({'font-weight': 100, border: '1px solid #ccc'})
             vue.bmap.addOverlay(label)
             label.addEventListener('click', function (e) {
