@@ -16,7 +16,7 @@
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.5.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "element-ui": "^2.0.5",
     "font-awesome": "^4.7.0",
     "jsplumb": "^2.5.7",
